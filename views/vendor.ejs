@@ -1,0 +1,245 @@
+<%- include('bootheader') -%>
+
+       <%- include('menubar') -%>
+              <style>
+                     hr{
+                            border: 1.5px solid;
+                     }
+              </style>
+
+              <div class="form-group" style="padding: 1.3em; border-radius: 10px; text-align: left; background-color: rgb(252, 81, 133);">
+                     <form method="post" action="/vendorHelper">
+                                   <section id="business_info">
+                                          <center>
+                                                 <h2>Reister your business with EasyVent!</h2> <br><br>
+                                                 <h5 style="display: inline;white-space:nowrap;"><b>What's the name of your business?</b></h5>
+                                                 <input type="text" name="business_name" class="form-control" style="display:inline; white-space:nowrap; width: auto;"> <br> <br><br>
+                                                 <h5 style="display: inline;white-space:nowrap;"><b>Please select a business type:</b></h5>
+                                                 <select name="business_type" class="form-control" style=" display: inline;white-space:nowrap; width: auto;">
+                                                        <option>Business Type</option>
+                                                        <option>Ground Transportation</option>
+                                                        <option>Photography</option>
+                                                        <option>Florist</option>
+                                                        <option>Catering</option>
+                                                        <option>Band</option>
+                                                        <option>DJ</option>
+                                                        <option>Ice Sculpture</option>
+                                                 </select> <br><br>   
+                                          </center>                                                    
+                                   </section>
+
+                            <center>
+                                   <section id="hours_of_operation">
+                                          <h5 style="display: inline;white-space:nowrap;"><b>Hours of operation:</b></h5>
+                                          <hr>
+                                          <table>
+                                                 <tbody>
+                                                        <tr>
+                                                               <td style="width:20%">
+                                                                      <h5 style="display: inline;white-space:nowrap;">Monday:
+                                                                      </h5>
+
+                                                               </td>
+                                                               <td>
+                                                                      <input type="text" name="monday_hour1"
+                                                                             class="form-control"
+                                                                             style="display:inline; white-space:nowrap; width: auto;">
+                                                                      <select name="monday_ampm1" class="form-control"
+                                                                             style=" display: inline;white-space:nowrap; width: auto;">
+                                                                             <option>AM/PM</option>
+                                                                             <option>AM</option>
+                                                                             <option>PM</option>
+                                                                      </select>
+                                                                      <h5 style="display: inline;white-space:nowrap;"><b> -
+                                                                             </b></h5>
+                                                                      <input type="text" name="monday_hour2"
+                                                                             class="form-control"
+                                                                             style="display:inline; white-space:nowrap; width: auto;">
+                                                                      <select name="monday_ampm2" class="form-control"
+                                                                             style=" display: inline;white-space:nowrap; width: auto;">
+                                                                             <option>AM/PM</option>
+                                                                             <option>AM</option>
+                                                                             <option>PM</option>
+                                                                      </select>
+                                                               </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                               <td style="width:20%">
+                                                                      <h5 style="display: inline;white-space:nowrap;">Tuesday:
+                                                                      </h5>
+
+                                                               </td>
+                                                               <td>
+                                                                      <input type="text" name="tuesday_hour1"
+                                                                             class="form-control"
+                                                                             style="display:inline; white-space:nowrap; width: auto;">
+                                                                      <select name="tuesday_ampm1" class="form-control"
+                                                                             style=" display: inline;white-space:nowrap; width: auto;">
+                                                                             <option>AM/PM</option>
+                                                                             <option>AM</option>
+                                                                             <option>PM</option>
+                                                                      </select>
+                                                                      <h5 style="display: inline;white-space:nowrap;"><b> -
+                                                                             </b></h5>
+                                                                      <input type="text" name="tuesday_hour2"
+                                                                             class="form-control"
+                                                                             style="display:inline; white-space:nowrap; width: auto;">
+                                                                      <select name="tuesday_ampm2" class="form-control"
+                                                                             style=" display: inline;white-space:nowrap; width: auto;">
+                                                                             <option>AM/PM</option>
+                                                                             <option>AM</option>
+                                                                             <option>PM</option>
+                                                                      </select>
+                                                               </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                               <td style="width:20%">
+                                                                      <h5 style="display: inline;white-space:nowrap;">Wednesday:
+                                                                      </h5>
+
+                                                               </td>
+                                                               <td>
+                                                                      <input type="text" name="wednesday_hour1" class="form-control"
+                                                                      style="display:inline; white-space:nowrap; width: auto;">
+                                                               <select name="wednesday_ampm1" class="form-control"
+                                                                      style=" display: inline;white-space:nowrap; width: auto;">
+                                                                      <option>AM/PM</option>
+                                                                      <option>AM</option>
+                                                                      <option>PM</option>
+                                                               </select>
+                                                               <h5 style="display: inline;white-space:nowrap;"><b> - </b></h5>
+                                                               <input type="text" name="wednesday_hour2" class="form-control"
+                                                                      style="display:inline; white-space:nowrap; width: auto;">
+                                                               <select name="wednesday_ampm2" class="form-control"
+                                                                      style=" display: inline;white-space:nowrap; width: auto;">
+                                                                      <option>AM/PM</option>
+                                                                      <option>AM</option>
+                                                                      <option>PM</option>
+                                                               </select>
+                                                               </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                               <td style="width:20%">
+                                                                      <h5 style="display: inline;white-space:nowrap;">Thursday:</h5>
+
+                                                               </td>
+                                                               <td>
+                                                                      <input type="text" name="thursday_hour1" class="form-control"
+                                                                      style="display:inline; white-space:nowrap; width: auto;">
+                                                               <select name="thursday_ampm1" class="form-control"
+                                                                      style=" display: inline;white-space:nowrap; width: auto;">
+                                                                      <option>AM/PM</option>
+                                                                      <option>AM</option>
+                                                                      <option>PM</option>
+                                                               </select>
+                                                               <h5 style="display: inline;white-space:nowrap;"><b> - </b></h5>
+                                                               <input type="text" name="thursday_hour2" class="form-control"
+                                                                      style="display:inline; white-space:nowrap; width: auto;">
+                                                               <select name="thursday_ampm2" class="form-control"
+                                                                      style=" display: inline;white-space:nowrap; width: auto;">
+                                                                      <option>AM/PM</option>
+                                                                      <option>AM</option>
+                                                                      <option>PM</option>
+                                                               </select>
+                                                               </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                               <td style="width:20%">
+                                                                      <h5 style="display: inline;white-space:nowrap;">Friday:</h5>
+
+                                                               </td>
+                                                               <td>
+                                                                      <input type="text" name="friday_hour1" class="form-control"
+                                                                      style="display:inline; white-space:nowrap; width: auto;">
+                                                               <select name="friday_ampm1" class="form-control"
+                                                                      style=" display: inline;white-space:nowrap; width: auto;">
+                                                                      <option>AM/PM</option>
+                                                                      <option>AM</option>
+                                                                      <option>PM</option>
+                                                               </select>
+                                                               <h5 style="display: inline;white-space:nowrap;"><b> - </b></h5>
+                                                               <input type="text" name="friday_hour2" class="form-control"
+                                                                      style="display:inline; white-space:nowrap; width: auto;">
+                                                               <select name="friday_ampm2" class="form-control"
+                                                                      style=" display: inline;white-space:nowrap; width: auto;">
+                                                                      <option>AM/PM</option>
+                                                                      <option>AM</option>
+                                                                      <option>PM</option>
+                                                               </select>
+                                                               </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                               <td style="width:20%">
+                                                                      <h5 style="display: inline;white-space:nowrap;">Satuday:</h5>
+
+                                                               </td>
+                                                               <td>
+                                                                      <input type="text" name="saturday_hour1" class="form-control"
+                                                                      style="display:inline; white-space:nowrap; width: auto;">
+                                                               <select name="saturday_ampm1" class="form-control"
+                                                                      style=" display: inline;white-space:nowrap; width: auto;">
+                                                                      <option>AM/PM</option>
+                                                                      <option>AM</option>
+                                                                      <option>PM</option>
+                                                               </select>
+                                                               <h5 style="display: inline;white-space:nowrap;"><b> - </b></h5>
+                                                               <input type="text" name="saturday_hour2" class="form-control"
+                                                                      style="display:inline; white-space:nowrap; width: auto;">
+                                                               <select name="saturday_ampm2" class="form-control"
+                                                                      style=" display: inline;white-space:nowrap; width: auto;">
+                                                                      <option>AM/PM</option>
+                                                                      <option>AM</option>
+                                                                      <option>PM</option>
+                                                               </select>
+                                                               </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                               <td style="width:20%">
+                                                                      <h5 style="display: inline;white-space:nowrap;">Sunday:</h5>
+
+                                                               </td>
+                                                               <td>
+                                                                      <input type="text" name="sunday_hour1" class="form-control"
+                                                                      style="display:inline; white-space:nowrap; width: auto;">
+                                                               <select name="sunday_ampm1" class="form-control"
+                                                                      style=" display: inline;white-space:nowrap; width: auto;">
+                                                                      <option>AM/PM</option>
+                                                                      <option>AM</option>
+                                                                      <option>PM</option>
+                                                               </select>
+                                                               <h5 style="display: inline;white-space:nowrap;"><b> - </b></h5>
+                                                               <input type="text" name="sunday_hour2" class="form-control"
+                                                                      style="display:inline; white-space:nowrap; width: auto;">
+                                                               <select name="sunday_ampm2" class="form-control"
+                                                                      style=" display: inline;white-space:nowrap; width: auto;">
+                                                                      <option>AM/PM</option>
+                                                                      <option>AM</option>
+                                                                      <option>PM</option>
+                                                               </select>
+                                                               </td>
+                                                        </tr>
+                                                 </tbody>
+
+                                          </table>
+
+
+                                   </section>
+                                   <br><br>
+                                   <section id="description_and_submittion">
+                                          <h5 style="display: inline;white-space:nowrap;">Please provide a breif description of your business:</h5><br>
+                                          <textarea name="business_description" rows="3" cols="20" class="form-control" style="width:50%"></textarea><br><br>               
+                                          <input type="submit" class="form-control" style="width:50%" value="Submit information">
+                                   </section>
+
+                            </center>
+                            
+                     </form>
+              </div>
+
+              <%- include('bootfooter') -%>

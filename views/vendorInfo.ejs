@@ -1,0 +1,135 @@
+<%- include('bootheader') -%>
+
+<%- include('menubar') -%>
+
+<script>
+    const axios = require('axios')
+</script>
+<script>
+console.log("before")
+
+axios.get('https://uselessfacts.jsph.pl/random.html').then((response) =>{
+            console.log(response.data)
+        })
+
+console.log("after")
+
+</script>
+
+
+<style>
+    hr{
+        border: 5px solid;
+    }
+    a{
+        color: white;
+        text-decoration:none;
+    }
+    button{
+        width: 10%;
+        margin-left: 2em; 
+        margin-right: 2em; 
+        background-color:red; 
+        color: white;
+        font-size: 40px;
+        font-weight: 700;
+    }
+</style>
+
+<div class="jumbotron" style="padding: 1.3em; border-radius: 10px; text-align: left; background-color: rgb(252, 81, 133); color: white;">
+    <center><h1>Your information</h1><br></center>
+    <h4>Business name: <%= body.business_name%></h4><br><br>
+    <h4>Industry: <%if (body.business_type != "Business Type") { %> <%= body.business_type%> <%}%> </h4><br><br>
+    <h3>Hours of operation: </h3><hr>
+    <h4>Monday: 
+        <b>
+            <%if (body.monday_hour1 != "" && body.monday_hour2 != "" &&body.monday_ampm1 != "AM/PM" && body.monday_ampm2 != "AM/PM") { %> 
+                <%= body.monday_hour1%> <%= body.monday_ampm1%> - <%= body.monday_hour2%> <%= body.monday_ampm2%> 
+            <%} else {%>
+                Not operating
+            <%}%>
+         </b>
+    </h4> <br>
+
+    <h4>Tuesday:
+        <b> 
+            <%if (body.tuesday_hour1 != "" && body.tuesday_hour2 != "" &&body.tuesday_ampm1 != "AM/PM" && body.tuesday_ampm2 != "AM/PM") { %> 
+                <%= body.tuesday_hour1%> <%= body.tuesday_ampm1%> - <%= body.tuesday_hour2%> <%= body.tuesday_ampm2%> 
+            <%} else {%>
+                Not operating
+            <%}%>
+        </b>
+    </h4> <br>
+
+    <h4>Wednesday: 
+        <b>
+            <%if (body.wednesday_hour1 != "" && body.wednesday_hour2 != "" &&body.wednesday_ampm1 != "AM/PM" && body.wednesday_ampm2 != "AM/PM") { %> 
+                <%= body.wednesday_hour1%> <%= body.wednesday_ampm1%> - <%= body.wednesday_hour2%> <%= body.wednesday_ampm2%> 
+            <%} else {%>
+                Not operating
+            <%}%>
+        </b>
+    </h4> <br>
+
+    <h4>Thursday: 
+        <b>
+            <%if (body.thursday_hour1 != "" && body.thursday_hour2 != "" &&body.thursday_ampm1 != "AM/PM" && body.thursday_ampm2 != "AM/PM") { %> 
+                <%= body.thursday_hour1%> <%= body.thursday_ampm1%> - <%= body.thursday_hour2%> <%= body.thursday_ampm2%> 
+            <%} else {%>
+                Not operating
+            <%}%>
+        </b>
+    </h4> <br>
+
+    <h4>Friday: 
+        <b>
+            <%if (body.friday_hour1 != "" && body.friday_hour2 != "" &&body.friday_ampm1 != "AM/PM" && body.friday_ampm2 != "AM/PM") { %> 
+                <%= body.friday_hour1%> <%= body.friday_ampm1%> - <%= body.friday_hour2%> <%= body.friday_ampm2%> 
+            <%} else {%>
+                Not operating
+            <%}%>
+         </b>
+    </h4> <br>
+
+    <h4>Saturday: 
+        <b>
+            <%if (body.saturday_hour1 != "" && body.saturday_hour2 != "" &&body.saturday_ampm1 != "AM/PM" && body.saturday_ampm2 != "AM/PM") { %> 
+                <%= body.saturday_hour1%> <%= body.saturday_ampm1%> - <%= body.saturday_hour2%> <%= body.saturday_ampm2%> 
+            <%} else {%>
+                Not operating
+            <%}%>
+         </b>
+    </h4> <br>
+
+    <h4>Sunday: 
+        <b>
+            <%if (body.sunday_hour1 != "" && body.sunday_hour2 != "" &&body.sunday_ampm1 != "AM/PM" && body.sunday_ampm2 != "AM/PM") { %> 
+                <%= body.sunday_hour1%> <%= body.sunday_ampm1%> - <%= body.sunday_hour2%> <%= body.sunday_ampm2%> 
+            <%} else {%>
+                Not operating
+            <%}%>
+        </b>
+    </h4> <hr>
+
+
+    <h4>Business Description:
+        <%if (body.business_description != "") { %> 
+            <%= body.business_description%> 
+        <%} else {%>
+            No Description Given
+        <%}%>
+    </h4>
+
+    <center>
+        <button type="button" class="btn btn-danger" style="font-size: 1.5em; font-weight: 700;">Confirm</button>
+        <button type="button" class="btn btn-danger" style="font-size: 1.5em; font-weight: 700;"><a href="/vendor">Refill Form</a></button>
+    </center>
+
+    
+    
+</div>
+
+<hr>
+<!-- <a href="/restaurant">Calculate the cost per person for another meal</a> -->
+
+<%- include('bootfooter') -%>
