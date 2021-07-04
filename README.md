@@ -1,3 +1,2 @@
-# App Design Demo
-This is a simple demo which shows how to create an app using HTML and Bootstrap for styling and 
-NodeJS/Express for the server infrastructure with EJS as the template engine.
+# EasyVent
+This is an event coodrination tool. It allows you as an event planner to coordinate between your the venue your want to host your event at and the vendors attending the event based on date.
