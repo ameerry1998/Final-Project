@@ -1,0 +1,33 @@
+<div class="jumbotron">
+    <h1> Quiz 3M: Walking Log </h1>
+    <h2>walk</h2>
+    <form method="POST" action="/walkingLog">
+        <input type="text" size="60" name="date" >date<br>
+        <input type="number" size="60" name="steps">steps<br>
+        <input type="number" size="60" name="minutes">minutes<br>
+        <input type="submit" value="record walk">
+    </form>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>date</th>
+                <th>steps</th>
+                <th>minutes</th>
+                <th>speed</th>
+             </tr>
+        </thead>
+        <tbody>
+            <% walks.forEach(item => {%>
+                <tr>
+                    <td><%= item.date %></td>
+                    <td><%= item.steps%></td>
+                    <td><%= item.minutes %></td>
+                    <td><%= item.speed %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+      </table>
+  </div>
+
+
+

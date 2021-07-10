@@ -1,0 +1,71 @@
+<%selected_professions.forEach(profession =>{%>
+    <% Vendors.forEach(vendor => {%>
+        <% BookedDates.forEach(date => {%>  
+            <!-- <p><%= vendor.userId %></p>
+            <p><%= date.userId%></p>       -->
+            <!--Matching between the vendor and the calendar entries-->
+            <%if((date.dateList) && (vendor.userId.equals(date.userId))){%>
+                    <%date.dateList.split(',').forEach(vendorBookedDate => {%>
+                            <%if((Event[0] != null) && (Event[0].date == vendorBookedDate )){%>
+                                <p><%= vendor.industry%></p>
+                                <p><%= profession%></p>
+                                <p><%= vendor.industry == profession%></p>
+                                <p><%= vendor.name%> is avilable on this date </p>
+                        <%}%>           
+                    <%})%>
+            <%}%>
+        <%})%>
+    <%})%>
+<%})%>
+
+
+
+//version2
+
+<%selected_professions.forEach(profession =>{%>
+    <p><%= selected_professions.length%></p>
+    <% Vendors.forEach(vendor => {%>
+        <%if(vendor.industry == profession){%> 
+            <% BookedDates.forEach(date => {%>  
+                <%if((date.dateList) && (vendor.userId.equals(date.userId))){%>
+                    <%date.dateList.split(',').forEach(vendorBookedDate => {%>
+                        <%if((Event[0] != null) && (Event[0].date == vendorBookedDate )){%>
+                            <p><%= vendor.industry%></p>
+                            <p><%= profession%></p>
+                            <p><%= vendor.industry == profession%></p>
+                            <p><%= vendor.name%> is avilable on this date </p>
+                        <%}%> 
+                    <%})%>
+                <%}%>
+            <%})%>
+        <%}%>
+    <%})%>
+<%})%> 
+
+
+
+
+
+
+
+
+//version 3
+
+<%for(int i =0; i >= selected_professions.length;i++) {%>
+    <% Vendors.forEach(vendor => {%>
+        <%if(vendor.industry == selected_professions[i]){%> 
+            <% BookedDates.forEach(date => {%>  
+                <%if((date.dateList) && (vendor.userId.equals(date.userId))){%>
+                    <%date.dateList.split(',').forEach(vendorBookedDate => {%>
+                        <%if((Event[0] != null) && (Event[0].date == vendorBookedDate )){%>
+                            <p><%= vendor.industry%></p>
+                            <p><%= selected_professions[i]%></p>
+                            <p><%= vendor.industry == selected_professions[i]%></p>
+                            <p><%= vendor.name%> is avilable on this date </p>
+                        <%}%> 
+                    <%})%>
+                <%}%>
+            <%})%>
+        <%}%>
+    <%})%>
+<%}%>

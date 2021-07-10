@@ -1,0 +1,95 @@
+<div class="jumbotron">
+  <h1>Worph Search</h1>
+  <p>Look up a word. All one-letter variations on that world will be shown,
+    if they exist in the game dictionary.
+  </p>
+  <!-- Search for words here -->
+  Look up: <input type="text" id="findWordInput" name="findWordInput">
+  <input type="submit" value="Search" onclick="findWord()">
+</div>
+
+<div id="list-div" class="container">
+  <div id="no-results" class="hidden">No results found.</div>
+  <table id="list" class="hidden table">
+    <thead>
+      <tr>
+        <th scope="col">Remove</th>
+        <th scope="col">Length</th>
+        <th scope="col">Word</th>
+        <th scope="col">Defintion</th>
+      </tr>
+    </thead>
+    <tbody id="list-body">
+    </tbody>
+  </table>
+</div>
+
+<script>
+
+  //TODO in the future, validation should be moved out of publicly acessible files
+  findWord =
+    async () => {
+      try {
+        let searchTarget = document.getElementById('findWordInput').value
+        if (searchTarget.length < 1) {
+          throw "Input cannot be left blank.";
+        }
+        let data = await postData('/wordsearch', { findThisWord: searchTarget })
+        console.log("postData for " + searchTarget + " returned: " + JSON.stringify(data))
+        let theList = document.getElementById('list-body')
+        document.getElementById('findWordInput').value = "" // Reset input
+        if (data.length < 1) {
+          document.getElementById("list").classList.add("hidden");
+          document.getElementById("no-results").classList.remove("hidden");
+        } else {
+          document.getElementById("list").classList.remove("hidden");
+          document.getElementById("no-results").classList.add("hidden");
+          var newBody = "";
+          let i = 0;
+          data.forEach(datum => {
+            newBody += `<tr id="${data[i]._id}">
+              <td><a style="cursor: pointer" onclick="remove('${data[i]._id}')">X</a></td>
+              <td>${data[i].length}</td>
+              <td>${data[i].word}</td>
+              <td>${data[i++].definition}</td>
+            </tr>`
+          });
+          theList.innerHTML = newBody;
+        }
+      } catch (e) {
+        alert("Error! " + e)
+      }
+    }
+
+  remove =
+    async (x) => {
+      try {
+        let target = document.getElementById(x)
+        target.parentNode.removeChild(target);
+      } catch (e) {
+        alert(`error3: ${e}`)
+      }
+    }
+
+  /*
+    postData will run a postRequest and return the result
+  */
+  async function postData(url = '', data = {}) {
+    // Default options are marked with *
+    const response = await fetch(url, {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: 'same-origin', // include, *same-origin, omit
+      headers: {
+        'Content-Type': 'application/json'
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data) // body data type must match "Content-Type" header
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
+
+</script>

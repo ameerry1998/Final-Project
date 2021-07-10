@@ -1,6 +1,4 @@
-<%- include('bootheader') -%>
 
-<%- include('menubar') -%>
 
 <link rel="stylesheet" href="./styles/style.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -32,7 +30,12 @@
                 <button type="button" class="btn btn-lg btn-primary"  onclick="addDate()">Available</button>
                 <button type="button" class="btn btn-lg btn-primary" onclick="removeDate()">Not Available</button>
                 <div id="bookedDates"></div>
+                
             </center>
+            <form method="post" action="/BookedDatesSave">
+                <input type='text' name="bookDatesDB" id="bookDatesDB"/>
+                <input type="submit">
+            </form>
         </section>
         <footer>
 
@@ -93,6 +96,6 @@
                 }
             }); 
             document.getElementById("bookedDates").innerHTML = str
+            bookDatesDB.value = dateArray;
         }
 </script>
-<%- include('bootfooter') -%>

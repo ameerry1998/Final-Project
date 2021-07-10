@@ -1,0 +1,97 @@
+<style>
+    .card{
+        background-image: linear-gradient(to right bottom, #fc5185, #fe6693, #ff79a1, #ff8aae, #ff9bba);
+        color:white;
+    }
+
+</style>
+
+
+<h1>hello</h1>
+<!-- <p><%=BookedDates%></p> -->
+<!-- <p><%= Event %></p> -->
+<%const selected_professions = [];%>
+<%if(Event[0] != null){
+    if(Event[0].Ground_transportation == "on"){
+        selected_professions.push("ground transportation")
+    }
+    if(Event[0].Photography == "on"){
+        selected_professions.push("Photography")
+    }
+    if(Event[0].Florist == "on"){
+        selected_professions.push("Florist")
+    }
+    if(Event[0].Catering == "on"){
+        selected_professions.push("Catering")
+    }
+    if(Event[0].Band == "on"){
+        selected_professions.push("Band")
+    }
+    if(Event[0].DJ == "on"){
+        selected_professions.push("DJ")
+    }
+    if(Event[0].Ice_sculpture == "on"){
+        selected_professions.push("ice sculpture")
+    }
+}%>
+<!-- <p><%=selected_professions%></p> -->
+
+
+
+<%selected_professions.forEach(profession =>{%>
+    <h2 style="color:rgb(252, 81, 133)"><%= profession%></h2>
+    <hr>
+    <!-- <p>entered selected_professions loop</p> -->
+    <!-- <p><%= selected_professions.length%></p> -->
+    <% Vendors.forEach(vendor => {%>
+        <!-- <p>entered Vendors loop</p> -->
+        <%if(vendor.industry == profession){%> 
+            <!-- <p>entered vendor.industry  if</p> -->
+            <% BookedDates.forEach(date => {%> 
+                <!-- <p>entered BookedDates loop</p> -->
+                <!-- <p><%= vendor.industry%></p> -->
+                <!-- <p><%= vendor.userId%></p> -->
+                <!-- <p><%= date.userId%></p> -->
+                <%if((date.dateList) && (vendor.userId.equals(date.userId))){%>
+                    <!-- <p>entered date.dateList if</p>  -->
+                    <%date.dateList.split(',').forEach(vendorBookedDate => {%>
+                        <!-- <p>entered date.dateList.split(',') loop</p>  -->
+                        <%if((Event[0] != null) && (Event[0].date == vendorBookedDate )){%>
+                            <!-- <p>entered Event[0].date if</p>  -->
+                            <!-- <p><%= vendor.industry%></p> -->
+                            <!-- <p><%= profession%></p> -->
+                            <!-- <p><%= vendor.industry == profession%></p> -->
+                            <!-- <p><%= vendor.name%> is avilable on this date </p> -->
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                  <h4 class="card-title"><%= vendor.name%></h4>
+                                  <hr>
+                                  <center>
+                                    <b><p class="card-text">Phone Number: <%= vendor.phone_number%></p></b><br>
+                                    <b><p class="card-text"><%= vendor.Address%></p></b><br>
+                                    <b><p class="card-text"><%= vendor.description%></p></b><br>
+                                      <p style="padding-top: 0.01em; padding-bottom: 0.01em;">Monday: <b><%= vendor.times.split('|')[0]%></b></p>
+                                      <p style="padding-top: 0.01em; padding-bottom: 0.01em;">Tuesday: <b><%= vendor.times.split('|')[1]%></b></p>
+                                      <p style="padding-top: 0.01em; padding-bottom: 0.01em;">Wednesday: <b><%= vendor.times.split('|')[2]%></b></p>
+                                      <p style="padding-top: 0.01em; padding-bottom: 0.01em;">Thursday: <b><%= vendor.times.split('|')[3]%></b></p>
+                                      <p style="padding-top: 0.01em; padding-bottom: 0.01em;">Friday: <b><%= vendor.times.split('|')[4]%></b></p>
+                                      <p style="padding-top: 0.01em; padding-bottom: 0.01em;">Saturday: <b><%= vendor.times.split('|')[5]%></b></p>
+                                      <p style="padding-top: 0.01em; padding-bottom: 0.01em;">Sunday: <b><%= vendor.times.split('|')[6]%></b></p>
+                                  <a href="#" class="card-link">Card link</a>
+                                    </center>
+                                </div>
+                              </div> <br><br>
+                        <%}%> 
+                    <%})%>
+                <%}%>
+            <%})%>
+        <%}%>
+    <%})%>
+<%})%> 
+
+
+
+
+
+
+

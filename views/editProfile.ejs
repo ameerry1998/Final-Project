@@ -1,0 +1,65 @@
+<div class="container" style="padding: 1.3em; border-radius: 10px; text-align: left; background-color: rgb(252, 81, 133); color: white;">
+    <div class="jumbotron">
+      <h1>Your Profile</h1>
+      <p>
+        Update your profile information!
+      </p>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-6">
+      </div>
+      <form method="post" action="editProfile">
+        <div class="col-lg-6" >
+            <table class="table table-bordered" style="text-align: center;">
+              <tbody>
+                <tr>
+                  <td>googlename</td>
+                  <td><%= user.googlename %></td>
+                </tr>
+                <tr>
+                  <td>googleemail</td>
+                  <td><%= user.googleemail %></td>
+                </tr>
+                <tr>
+                  <td>User Type</td>
+                  <td>
+                    <!-- <input type="text" name="userType"
+                      value="<%= user.userType %>"> -->
+                      <select name="User_Type" class="form-control" style=" display: inline;white-space:nowrap; width: auto;">
+                        <option name="Client" value="Client">Client</option>
+                        <option name="Vendor" value="Vendor">Vendor</option>
+                      </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>username</td>
+                  <td>
+                    <input type="text" name="username"
+                      value="<%= user.username %>">
+                  </td>
+                </tr>
+                <tr>
+                  <td>age</td>
+                  <td>
+                    <input type="text" name="age"
+                      value="<%= user.age %>">
+                  </td>
+                </tr>
+                <tr>
+                  <td>imageURL</td>
+                  <td>
+                    <input type="text" name="imageURL"
+                      value="<%= user.imageURL %>">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+
+      <div class="col-sm-4">
+      </div>
+    </div>
+    <input class="btn btn-lg btn-danger" type="submit" value="update Profile">
+    </form>
+</div>

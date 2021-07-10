@@ -1,22 +1,3 @@
-<%- include('bootheader') -%>
-
-<%- include('menubar') -%>
-
-<script>
-    const axios = require('axios')
-</script>
-<script>
-console.log("before")
-
-axios.get('https://uselessfacts.jsph.pl/random.html').then((response) =>{
-            console.log(response.data)
-        })
-
-console.log("after")
-
-</script>
-
-
 <style>
     hr{
         border: 5px solid;
@@ -36,8 +17,15 @@ console.log("after")
     }
 </style>
 
+<script>   
+    const Vendor = require('./models/Vendor');
+    let data = Vendor.find({})
+    console.log(data)
+</script>
+
 <div class="jumbotron" style="padding: 1.3em; border-radius: 10px; text-align: left; background-color: rgb(252, 81, 133); color: white;">
     <center><h1>Your information</h1><br></center>
+    <form method="post" action="/vendorConfirm">
     <h4>Business name: <%= body.business_name%></h4><br><br>
     <h4>Industry: <%if (body.business_type != "Business Type") { %> <%= body.business_type%> <%}%> </h4><br><br>
     <h3>Hours of operation: </h3><hr>
@@ -121,9 +109,13 @@ console.log("after")
     </h4>
 
     <center>
-        <button type="button" class="btn btn-danger" style="font-size: 1.5em; font-weight: 700;">Confirm</button>
+        <input type="text" name="hola" class="btn btn-danger" style="font-size: 1.5em; font-weight: 700;"></input>
+            <input type="submit" value="Confirm" class="btn btn-danger" style="font-size: 1.5em; font-weight: 700;"></input>
+        </form>
         <button type="button" class="btn btn-danger" style="font-size: 1.5em; font-weight: 700;"><a href="/vendor">Refill Form</a></button>
     </center>
+
+    <form action=""></form>
 
     
     
@@ -132,4 +124,3 @@ console.log("after")
 <hr>
 <!-- <a href="/restaurant">Calculate the cost per person for another meal</a> -->
 
-<%- include('bootfooter') -%>

@@ -1,203 +1,288 @@
-/*
-  app.js -- This creates an Express webserver
-*/
+const express = require('express');
+const expressLayouts = require("express-ejs-layouts");
+const path = require('path'); //TODO where does this refer
+const createError = require('http-errors');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const cors = require('cors');
+const auth = require('./config/auth.js');
+const axios = require('axios');
 
-// First we load in all of the packages we need for the server...
-const createError = require("http-errors");
-const express = require("express");
-const path = require("path");
-const cookieParser = require("cookie-parser");
-const session = require("express-session");
-//const bodyParser = require("body-parser");
-const axios = require("axios");
-var debug = require("debug")("personalapp:server");
-var bodyParser = require('body-parser')
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
-var jsonParser = bodyParser.json()
+const mongoDB_URI = 'mongodb://localhost/sequoia'
+//const mongoDB_URI = process.env.MONGODB_URI
 
+const mongoose = require('mongoose');
+mongoose.connect(mongoDB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+//mongoose.connect( `mongodb+srv://${auth.atlasAuth.username}:${auth.atlasAuth.password}@cluster0-yjamu.mongodb.net/authdemo?retryWrites=true&w=majority`);
 
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:')); //TODO does 'on' represent a conditional error?
+db.once('open', function () {
+    console.log(`Successfully connected to db@${mongoDB_URI}`)
+});
 
-// Now we create the server
-const app = express();
+const authRouter = require('./routes/authentication');
+const isLoggedIn = authRouter.isLoggedIn
+const loggingRouter = require('./routes/logging');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const toDoRouter = require('./routes/todo');
+const toDoAjaxRouter = require('./routes/todoAjax');
+const wordSearchRouter = require('./routes/wordsearch');
+const eventRouter = require('./routes/event');
 
-// Here we specify that we will be using EJS as our view engine
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
+const app = express(); //TODO should look up what this implies
 
-// Here we process the requests so they are easy to handle
+// templating/view engine setup
+app.set('views', path.join(__dirname, 'views')); //TODO as well as the set command
+// app.set('layout', './layouts/full-width') //doesn't exist yet
+app.set('view engine', 'ejs');
+
+app.use(expressLayouts);
+app.use(cors());
+
+app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Here we specify that static files will be in the public folder
-app.use(express.static(path.join(__dirname, "public")));
+app.use(authRouter)
+app.use(loggingRouter);
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+app.use('/todo', toDoRouter);
+app.use('/todoAjax', toDoAjaxRouter);
+app.use('/wordsearch', wordSearchRouter);
+app.use('/event',eventRouter)
 
-// Here we enable session handling ..
-app.use(
-  session({
-    secret: "zzbbya789fds89snana789sdfa",
-    resave: false,
-    saveUninitialized: false
-  })
-);
+const User = require('./models/User');
+const Vendor = require('./models/Vendor');
+const BookedDates = require('./models/BookedDates');
+const Event = require('./models/Event');
+const SearchHistory = require('./models/SearchHistory.js');
 
-//app.use(bodyParser.urlencoded({ extended: false }));
+// ####################
 
-// This is an example of middleware
-// where we look at a request and process it!
-app.use(function(req, res, next) {
-  //console.log("about to look for routes!!! "+new Date())
-  console.log(`${req.method} ${req.url}`);
-  //console.dir(req.headers)
-  next();
+app.get('/profiles', //TODO syntax of get takes three arguments?
+    isLoggedIn,
+    async (req, res, next) => {
+        try {
+            res.locals.profiles = await User.find({}) //TODO What is find
+            res.render('profiles')
+        } catch (e) {
+            next(e) //TODO how to use next
+        }
+    }
+)
+
+app.use('/publicprofile/:userId',
+    async (req, res, next) => {
+        try {
+            let userId = req.params.userId
+            res.locals.profile = await User.findOne({ _id: userId })
+            res.render('publicprofile')
+        } catch (e) {
+            console.log("Error in /profile/userId:")
+            next(e)
+        }
+    }
+)
+
+
+app.get('/profile',
+    isLoggedIn,
+    async (req, res) => {
+        res.locals.history = await SearchHistory.find({userId: req.user._id})
+        res.render('profile')
+    })
+
+app.get('/editProfile',
+    isLoggedIn,
+    (req, res) => res.render('editProfile'))
+
+app.post('/editProfile',
+    isLoggedIn,
+    async (req, res, next) => {
+        try {
+            let username = req.body.username
+            let age = req.body.age
+            req.user.userType = req.body.User_Type
+            req.user.username = username
+            req.user.age = age
+            req.user.imageURL = req.body.imageURL
+            await req.user.save()
+            res.redirect('/profile')
+        } catch (error) {
+            next(error)
+        }
+    })
+
+app.post('/vendorHelper',
+    isLoggedIn,
+    async (req, res, next) => {
+        const vendor_data = {
+            name: req.body.business_name,
+            industry: req.body.business_type,
+            times: req.body.monday_hour1 +" " + req.body.monday_ampm1 + " - " + req.body.monday_hour2 + " " + req.body.monday_ampm2
+            + " | " + req.body.tuesday_hour1 + " " + req.body.tuesday_ampm1 + " - " + req.body.tuesday_hour2 + " " +req.body.tuesday_ampm2
+            + " | " + req.body.wednesday_hour1 + " " + req.body.wednesday_ampm1 + " - " + req.body.wednesday_hour2 + " " + req.body.wednesday_ampm2
+            + " | " + req.body.thursday_hour1 + " " + req.body.thursday_ampm1 + " - " + req.body.thursday_hour2 + " " + req.body.thursday_ampm2
+            + " | " + req.body.friday_hour1 + " " + req.body.friday_ampm1 + " - " + req.body.friday_hour2 + " " + req.body.friday_ampm2
+            + " | " + req.body.saturday_hour1 + " " + req.body.saturday_ampm1 + " - " + req.body.saturday_hour2 + " " + req.body.saturday_ampm2
+            + " | " + req.body.sunday_hour1 + " " + req.body.sunday_ampm1 + " - " + req.body.sunday_hour2 + " " + req.body.sunday_ampm2,
+            description: req.body.business_description,
+            userId: req.user._id,
+            phone_number: req.body.phone_number,
+            Address: req.body.Address
+        }
+        const newVendor = new Vendor(vendor_data)
+        await newVendor.save()
+        console.log(req.body)
+        res.locals.body = req.body
+        try {
+            res.render('vendorInfo')
+        } catch (error) {
+            next(error)
+        }
+})
+
+
+
+app.post('/vendorConfirm',
+    isLoggedIn,
+    async (req, res, next) => {
+        try {
+            res.render('index')
+        } catch (error) {
+            next(error)
+        }
+})
+
+app.post('/BookedDatesSave',
+    isLoggedIn,
+    async (req, res, next) => {
+        try {
+            const bookeddatesdata = {
+                dateList: req.body.bookDatesDB,
+                userId: req.user._id  
+            }
+            const newBookedDates = new BookedDates(bookeddatesdata)
+            await newBookedDates.save()
+            res.redirect('/profile')
+        } catch (error) {
+            next(error)
+        }
+    })
+
+
+app.post('/EventSave',
+    isLoggedIn,
+    async (req, res, next) => {
+        try {
+            const eventdata = {
+                creatorName: req.body.fullName,
+                creatorNumber: req.body.phoneNumber,
+                date: req.body.eventDate,
+                venue: req.body.venueName,
+                Ground_transportation: req.body.Ground_transportation,
+                Photography: req.body.Photography,
+                Florist: req.body.Florist,
+                Catering: req.body.Catering,
+                Band: req.body.Band,
+                DJ: req.body.DJ,
+                Ice_sculpture: req.body.Ice_sculpture,
+                description: req.body.bio,
+                userId: req.user._id  
+            }
+            // const newEvent = new Event(eventdata)
+            // await newEvent.save()
+            new Event(eventdata).save()
+            res.redirect('/profile')
+        } catch (error) {
+            next(error)
+        }
+})
+
+
+
+
+
+
+// app.post('/vendorHelper', (req,res) => {
+//     res.locals.body = req.body
+//     res.render('vendorInfo')
+// })
+
+
+app.use('/data', (req, res) => {
+    res.json([{ a: 1, b: 2 }, { a: 5, b: 3 }]);
+})
+
+app.get("/test", async (req, res, next) => {
+    try {
+        const u = await User.find({})
+        console.log("found u " + u)
+    } catch (e) {
+        next(e)
+    }
+
+})
+
+
+
+app.get('/apiTest',
+    isLoggedIn,
+    (req, res, next) => {
+
+        res.render('apiTest')
+    })
+
+app.post('/covidfacts', async (req, res, next) => {
+    try {
+        let response = await axios.get(`https://api.covidtracking.com/v1/us/${req.body.date}.json`);
+        res.json(response.data);
+    } catch (e) {
+        next(e)
+    }
 });
 
-// here we start handling routes
-app.get("/", (req, res) => {
-  res.render("index");
-});
-
-app.get("/demo",
-        function (req, res){res.render("demo");});
 
 app.get("/about", (request, response) => {
-  response.render("about");
-});
-
-app.get("/form", (request,response) => {
-  response.render("form")
-})
-
-app.get("/dataDemo", (request,response) => {
-  response.locals.name="Tim Hickey"
-  response.locals.vals =[1,2,3,4,5]
-  response.locals.people =[
-    {'name':'Tim','age':65},
-    {'name':'Yas','age':29}]
-  response.render("dataDemo")
-})
-
-app.get("/calendar", (request,response) => {
-  response.render("calendar")
-})
-
-app.get("/calendarview", (request,response) => {
-  response.render("calendarview")
-})
-
-app.get("/calendarview1", (request,response) => {
-  response.render("calendarview1")
-})
+    response.render("about");
+  });
 
 
+
+app.get("/eventorganizer",
+function (req, res){res.render("eventorganizer");});
 
 app.get("/vendor", (request,response) => {
-  response.render("vendor")
-})
-
-app.post('/vendorHelper', (req,res) => {
-  // res.json(req.body)
-  res.locals.body = req.body
-  res.render('vendorInfo')
-})
+    response.render("vendor")
+  })
+  
 
 
-
-
-app.post("/showformdata", (request,response) => {
-  response.json(request.body)
-})
-
-// Here is where we will explore using forms!
+app.get("/calendar", (request,response) => {
+    response.render("calendar")
+  })
 
 
 
-// this example shows how to get the current US covid data
-// and send it back to the browser in raw JSON form, see
-// https://covidtracking.com/data/api
-// for all of the kinds of data you can get
-app.get("/c19",
-  async (req,res,next) => {
-    try {
-      const url = "https://covidtracking.com/api/v1/us/current.json"
-      const result = await axios.get(url)
-      res.json(result.data)
-    } catch(error){
-      next(error)
-    }
-})
-
-// this shows how to use an API to get recipes
-// http://www.recipepuppy.com/about/api/
-// the example here finds omelet recipes with onions and garlic
-app.get("/omelet",
-  async (req,res,next) => {
-    try {
-      const url = "http://www.recipepuppy.com/api/?i=onions,garlic&q=omelet&p=3"
-      const result = await axios.get(url)
-      res.json(result.data)
-    } catch(error){
-      next(error)
-    }
-})
-
-// Don't change anything below here ...
-
-// here we catch 404 errors and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+    next(createError(404));
 });
 
-// this processes any errors generated by the previous routes
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
-  // render the error page
-  res.status(err.status || 500);
-  res.render("error");
+// error handler
+app.use(function (err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
-
-//Here we set the port to use
-const port = "5000";
-app.set("port", port);
-
-// and now we startup the server listening on that port
-const http = require("http");
-const server = http.createServer(app);
-
-server.listen(port);
-
-function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-  debug("Listening on " + bind);
-}
-
-function onError(error) {
-  if (error.syscall !== "listen") {
-    throw error;
-  }
-
-  var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
-
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case "EACCES":
-      console.error(bind + " requires elevated privileges");
-      process.exit(1);
-      break;
-    case "EADDRINUSE":
-      console.error(bind + " is already in use");
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
-}
-
-server.on("error", onError);
-
-server.on("listening", onListening);
 
 module.exports = app;
